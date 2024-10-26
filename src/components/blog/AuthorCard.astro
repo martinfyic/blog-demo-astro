@@ -1,0 +1,51 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+	author: CollectionEntry<'author'>;
+}
+
+const { author } = Astro.props;
+const { avatar, bio, github, linkedIn, name, subtitle, twitter } = author.data;
+---
+
+<div class='mx-auto max-w-lg rounded-lg bg-gray-100 p-5 shadow-md'>
+	<Image
+		class='mx-auto h-32 w-32 rounded-full shadow-md'
+		src={avatar}
+		alt={name}
+		width={200}
+		height={200}
+	/>
+	<h2 class='mt-3 text-center text-2xl font-semibold'>{name}</h2>
+	<p class='mt-1 text-center text-gray-600'>{subtitle}</p>
+	<div class='mt-5 flex justify-center'>
+		<a
+			href={`https://twitter.com/${twitter}`}
+			class='mx-3 text-blue-500 hover:text-blue-700'
+			>Twitter</a
+		>
+		<a
+			href={linkedIn}
+			class='mx-3 text-blue-500 hover:text-blue-700'
+			>LinkedIn</a
+		>
+		<a
+			href={github}
+			class='mx-3 text-blue-500 hover:text-blue-700'
+			>GitHub</a
+		>
+	</div>
+	<div class='mt-5'>
+		<h3 class='text-xl font-semibold'>Bio</h3>
+		<p class='mt-2 text-pretty text-gray-600'>{bio}</p>
+		<div class='flex justify-end text-gray-700 hover:underline'>
+			<a
+				href={`/blog/${author.id}`}
+				class='mt-4'
+				>Leer más</a
+			>
+		</div>
+	</div>
+</div>
