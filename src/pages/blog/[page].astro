@@ -1,0 +1,70 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import BlogPost from '@/components/blog/BlogPost.astro';
+import MainLayout from '@/layouts/MainLayout.astro';
+
+export const getStaticPaths = (async ({ paginate }) => {
+	const blogPost = await getCollection('blog');
+
+	return paginate(blogPost, { pageSize: 2 });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+---
+
+<MainLayout>
+	<div class='mx-auto py-10'>
+		<h1
+			class='mb-5 text-3xl font-semibold capitalize text-gray-800 lg:text-4xl dark:text-white'
+		>
+			MartinDev Blog paginado
+		</h1>
+	</div>
+
+	<section
+		class='mb-16 bg-gray-900'
+		aria-label='Entradas de blog'
+	>
+		<div class='mt-8 grid grid-cols-1 gap-8 md:mt-16 md:grid-cols-2'>
+			{page.data.map(post => <BlogPost post={post} />)}
+		</div>
+	</section>
+
+	<section
+		aria-label='Controles'
+		class='flex justify-between'
+	>
+		<a
+			href={page.url.prev}
+			class:list={[
+				'mx-4',
+				{
+					disabled: !page.url.prev,
+				},
+			]}
+			>Anteriores</a
+		>
+
+		<a
+			href={page.url.next}
+			class:list={[
+				'mx-4',
+				{
+					disabled: !page.url.next,
+				},
+			]}
+			>Siguientes</a
+		>
+	</section>
+</MainLayout>
+
+<style>
+	a {
+		@apply cursor-pointer rounded bg-blue-500 p-2 text-white hover:bg-blue-600;
+	}
+
+	.disabled {
+		@apply bg-gray-600 hover:bg-gray-600;
+	}
+</style>
